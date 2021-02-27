@@ -1,0 +1,21 @@
+.s_cursor {
+  cursor: none;
+  top: -10px;
+  left: -10px;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  z-index: 9999;
+}
+
+.s_cursor_warper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+}
+
+.s_containt_warper {
+  cursor: none;
+}
