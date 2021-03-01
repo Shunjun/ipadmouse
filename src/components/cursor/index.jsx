@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef, Provider } from "react";
+import React, { useEffect, useState, useMemo, useRef, useContext } from "react";
 import RcTweenOne from "rc-tween-one";
 import { throttle } from "lodash";
 import AlternateContext from "./utils/alternateContext";
@@ -18,6 +18,16 @@ function Cursor(props) {
     color = "#000000",
   } = props;
 
+  const containerRef = useRef(null);
+
+  // 范围
+  const AlterContext = useContext(AlternateContext);
+  console.log(AlterContext);
+  const onAlter = useRef(false)
+
+  
+  
+
   // createCursorStyle
   const cursorStyle = useMemo(() => {
     let _radius;
@@ -35,6 +45,10 @@ function Cursor(props) {
 
   const mousePos = useRef([0, 0]);
   const inPage = useRef(false);
+  
+
+  
+  
 
   // createAnimationConfig
   function createAnimationConfig(type) {
@@ -48,7 +62,7 @@ function Cursor(props) {
     } else {
       width = height = 0;
     }
-    console.log(_inPage, width, height);
+    // console.log(_inPage, width, height);
 
     if (type === "leave") {
       duration = 50;
@@ -66,6 +80,7 @@ function Cursor(props) {
 
   const [animation, setAnimation] = useState({});
 
+  // TODO 
   function isAvailableIn([tx, ty]) {
     const clientHeight = window.innerHeight,
       clientWidth = window.innerWidth;
@@ -77,11 +92,12 @@ function Cursor(props) {
     return !isNotAvailableIn;
   }
 
+
   // mousemove
   useEffect(() => {
     function mousemoveListener(e) {
       const { clientX, clientY } = e;
-      console.log(clientX, clientY);
+      // console.log(clientX, clientY);
       mousePos.current = [clientX, clientY];
       inPage.current = true;
       if (isAvailableIn([clientX, clientY])) {
@@ -110,15 +126,24 @@ function Cursor(props) {
   }, []);
 
   return (
-    <AlternateContext.Provider>
+    <>
       <RcTweenOne
         animation={animation}
         componentProps={{ className: "s_cursor_warper" }}
       >
         <span className="s_cursor" style={cursorStyle}></span>
       </RcTweenOne>
-      <div className="s_containt_warper">{children}</div>
-    </AlternateContext.Provider>
+      <div
+        className="s_containt_warper"
+        ref={(e) => {
+          // TODO 查找 warper 范围
+          // console.log("warper", e);
+          containerRef.current = e;
+        }}
+      >
+        {children}
+      </div>
+    </>
   );
 }
 
