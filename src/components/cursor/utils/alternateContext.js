@@ -2,30 +2,42 @@ import { createContext } from "react";
 
 class Alternates {
   constructor() {
-    this.alters = {
-      
-    };
+    this.alters = new Map();
+    this.changeFunc = null;
+    this.leaveFunc = null;
   }
 
-  bind(){
-    
+  bind(changeCb, leaveCb) {
+    this.changeFunc = changeCb;
+    this.leaveFunc = leaveCb;
   }
 
-  add() {
-    this.alters.push('1')
-    console.log('added')
+  add(child, info) {
+    this.alters.set(child, info);
+    this.changeCursor();
   }
 
-  refresh(){
-
+  refresh(child, info) {
+    if (this.alters.has(child)) {
+      this.alters.set(child, info);
+      this.changeCursor();
+    }
   }
 
-
-  remove(){
-
+  changeCursor() {
+    // TODO 如果有多个元素,选择正确的元素
+    const info = Array.from(this.alters.values())[0];
+    if (typeof this.changeFunc === "function") {
+      this.changeFunc(info);
+    }
   }
-  
-  
+
+  remove(child) {
+    this.alters.delete(child);
+    if (typeof this.leaveFunc === "function") {
+      this.leaveFunc();
+    }
+  }
 }
 
 export default createContext(new Alternates());

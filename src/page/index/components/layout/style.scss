@@ -1,0 +1,42 @@
+@import "../../../../styles/index.scss";
+
+.s-warpper {
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+  width: 100vw;
+  max-width: 1400px;
+
+  border-radius: 15px;
+  background-color: $navbar-background-color;
+  box-shadow: 0px 10px 40px 0px #d4d4e5;
+
+  @include l_screen {
+    flex-direction: row;
+    max-height: 985px;
+    border-radius: 30px;
+  }
+}
+
+.s-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: $min-width;
+  width: 354px;
+
+  @include l_screen {
+    flex-direction: column;
+  }
+}
+
+.s-content {
+  overflow: hidden;
+  flex: 1;
+
+  @include l_screen {
+    border-radius: 30px;
+    background-color: #fff;
+  }
+}

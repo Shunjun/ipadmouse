@@ -1,0 +1,87 @@
+@import "@/styles/index.scss";
+
+.navbar-usrinfo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: $navbar-marginleft;
+  margin-top: 58px;
+  margin-bottom: 16px;
+
+  &-avatar-icon {
+    background-color: red;
+    align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  &-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    margin-left: 18px;
+  }
+
+  &-username {
+    color: $font-color-title;
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  &-email {
+    color: $font-color-graytitle;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+  &-setting {
+    margin-left: 28px;
+  }
+}
+
+.user-avatar {
+  width: 60px;
+  height: 60px;
+}
+
+.navbar-nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  overflow: scroll;
+
+  &-list-title {
+    margin-top: 16px;
+    margin-left: $navbar-marginleft;
+    line-height: 50px;
+    color: $font-color-graytitle;
+    font-size: 16px;
+  }
+
+  &-item:last-child {
+    border-bottom: none;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    height: 74px;
+    padding-left: $navbar-marginleft;
+    width: 300px;
+    border-bottom: $border-bottom-line;
+
+    &-active {
+      padding: 6px;
+      border-radius: 8px;
+    }
+
+    &-title {
+      text-align: centers;
+      color: $font-color-title;
+      line-height: 100%;
+      margin-left: 20px;
+    }
+  }
+}

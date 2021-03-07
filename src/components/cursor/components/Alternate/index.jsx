@@ -1,47 +1,59 @@
-import React, { createElement, useContext, useRef, useEffect } from "react";
+import React, {
+  createElement,
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import AlternateContext from "../../utils/alternateContext";
-import { getElementPos, getElementSize } from "../../utils/index";
+import { getChildInfo, isSameInfo } from "../../utils/index";
 
 export default function Alternate(props) {
   const { children } = props;
   const Alternates = useContext(AlternateContext);
 
+  const isChildHover = useRef(false);
+
   const childRef = useRef();
 
+  const childInfo = useRef();
+
+  // TODO 初始渲染就在 child 中,不会触发 Enter 事件
   useEffect(() => {
-    // 滚动
-    // resize
+    // const child = childRef.current;
+    // console.log(child);
   }, []);
 
+  const handleMouseEnter = useCallback(() => {
+    isChildHover.current = true;
+    const child = childRef.current;
+    childInfo.current = getChildInfo(child);
+    Alternates.add(child, childInfo.current);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    isChildHover.current = false;
+    const child = childRef.current;
+    Alternates.remove(child);
+  }, []);
+
+  // 检查元素位置是否改变,更新鼠标形状及位置
   useEffect(() => {
-    getChildInfo();
+    if (isChildHover.current) {
+      const child = childRef.current;
+      const preInfo = childInfo.current;
+      childInfo.current = getChildInfo(child);
+
+      if (isSameInfo(preInfo, childInfo.current)) {
+        Alternates.refresh();
+      }
+    }
   });
-
-  function getChildInfo() {
-    const child = childRef.current;
-    const [width, height] = getElementSize(child);
-    const pos = getElementPos(child);
-    console.log(pos);
-    console.dir(child);
-
-    const childInfo = {
-      width,
-      height,
-    };
-  }
-
-  function handleMouseOver() {
-    const child = childRef.current;
-
-    Alternates.add();
-  }
-
-  function handleMouseLeave() {}
 
   const tagProps = {
     ...children.props,
     ref: childRef,
-    onMouseOver: handleMouseOver,
+    onMouseEnter: handleMouseEnter,
     onMouseLeave: handleMouseLeave,
   };
 

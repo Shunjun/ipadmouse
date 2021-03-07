@@ -1,0 +1,18 @@
+@import "@/styles/index.scss";
+
+.icon-bg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: $icon-defauli-bg-size;
+  height: $icon-defauli-bg-size;
+  border-radius: $icon-default-bg-border-radius;
+
+  background-color: $red;
+}
+
+.icon {
+  color: $white;
+  font-size: $icon-defauli-size;
+}
