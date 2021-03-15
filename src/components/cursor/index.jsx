@@ -3,7 +3,7 @@ import RcTweenOne from "rc-tween-one";
 import { throttle } from "lodash";
 import AlternateContext from "./utils/alternateContext";
 import _Alternate from "./components/Alternate";
-import "./style.css";
+import "./style.scss";
 import {
   copyFromStyle,
   getPerformanceTime,
@@ -11,6 +11,7 @@ import {
   warn,
 } from "./utils";
 import { useAvailableRange } from "./hooks";
+import { gsap } from "gsap";
 
 const path = "M0,100 100,0";
 const moveEase = RcTweenOne.easing.path(path);
@@ -39,6 +40,7 @@ function Cursor(props) {
     ...warperProps
   } = props;
 
+  const cursorRef = useRef(null);
   const containerRef = useRef(null);
   // 保存触发元素的 Context
   const AlterContext = useContext(AlternateContext);
@@ -52,7 +54,7 @@ function Cursor(props) {
   const mousePos = useRef([0, 0]);
   // 是否在有效范围内
   const inPage = useRef(false);
-
+  //
   const duration = useRef(0);
 
   // 绑定 hover 动画函数
@@ -88,15 +90,24 @@ function Cursor(props) {
     if (!_inPage) {
       width = height = 0;
     }
-    return {
-      ...cursorInfo,
-      width,
-      height,
-      ease,
-      duration,
-      x: clientX,
-      y: clientY,
-    };
+
+    if (type === "leave") {
+      return {
+        ...cursorInfo,
+        ease,
+        duration,
+        width,
+        height,
+      };
+    } else {
+      return {
+        ...cursorInfo,
+        ease,
+        duration,
+        x: clientX - Math.floor(width / 2),
+        y: clientY - Math.floor(height / 2),
+      };
+    }
   }
 
   function getAnimationEase(type) {
@@ -146,6 +157,8 @@ function Cursor(props) {
   }
 
   function createAnimation(config) {
+    // console.log(config);
+    // gsap.to(cursorRef.current, config);
     setAnimation(config);
   }
 
@@ -153,14 +166,15 @@ function Cursor(props) {
 
   // 鼠标是否在有效范围内
   function isAvailableIn([tx, ty]) {
+    const { width, height } = cursorInfo;
     if (availableRange === "window") {
       const clientHeight = window.innerHeight,
         clientWidth = window.innerWidth;
       const isNotAvailableIn =
-        tx < size / 6 ||
-        ty < size / 6 ||
-        tx > clientWidth - size / 6 ||
-        ty > clientHeight - size / 6;
+        tx < width / 6 ||
+        ty < height / 6 ||
+        tx > clientWidth - width / 6 ||
+        ty > clientHeight - height / 6;
       return !isNotAvailableIn;
     } else if (availableRange === "wrapper") {
       // 查找 wrapper 范围
@@ -177,7 +191,6 @@ function Cursor(props) {
     clearTimeout(leaveTimer.current);
     alterLeaving.current = false;
     alterHover.current = true;
-    // console.log("进来了");
     createAnimation(getHoverAnimationConfig(info));
   }
 
@@ -190,11 +203,12 @@ function Cursor(props) {
       alterLeaving.current = false;
     }, duration.current);
     // console.log("离开了");
+    console.log("leave", getMoveAnimationConfig("leave"));
     createAnimation(getMoveAnimationConfig("leave"));
   }
 
-  // mousemove
   useEffect(() => {
+    // mousemove
     function mousemoveListener(e) {
       if (alterHover.current) {
         return;
@@ -203,6 +217,7 @@ function Cursor(props) {
       mousePos.current = [clientX, clientY];
       inPage.current = true;
       if (isAvailableIn([clientX, clientY])) {
+        console.log("move", getMoveAnimationConfig("move"));
         createAnimation(getMoveAnimationConfig("move"));
       } else {
         // leave viewport
@@ -211,6 +226,7 @@ function Cursor(props) {
     }
     const throttleMousemove = throttle(mousemoveListener, 30);
 
+    // mouseLeave
     function mouseleaveListerner(e) {
       inPage.current = false;
       createAnimation(getMoveAnimationConfig("disable"));
@@ -238,6 +254,7 @@ function Cursor(props) {
       >
         {children}
       </div>
+      {/* <span className="s-cursor" ref={cursorRef}></span> */}
       <RcTweenOne
         component="span"
         animation={animation}

@@ -1,0 +1,36 @@
+@import "@/styles/index.scss";
+
+.tableitem {
+  &-row {
+    border-spacing: 0;
+    display: table-row;
+    width: 100%;
+    text-align: start;
+    font-size: 16px;
+
+    th {
+      text-align: inherit;
+      padding: 12px;
+      padding-left: 0;
+      color: $deepbule;
+      display: flex;
+      align-items: center;
+    }
+
+    td {
+      color: $gray;
+      padding: 12px;
+    }
+
+    .tableitem-amount[class] {
+      text-align: end;
+      font-size: 18px;
+      font-weight: 600;
+      color: $font-color-title;
+    }
+  }
+
+  &-title {
+    margin-left: 14px;
+  }
+}

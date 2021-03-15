@@ -5,7 +5,7 @@
   justify-content: flex-start;
   align-items: center;
   margin-left: $navbar-marginleft;
-  margin-top: 58px;
+  margin-top: 16px;
   margin-bottom: 16px;
 
   &-avatar-icon {
@@ -50,7 +50,11 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  overflow: scroll;
+  overflow-y: hidden;
+
+  &:hover {
+    overflow-y: auto;
+  }
 
   &-list-title {
     margin-top: 16px;
@@ -73,6 +77,8 @@
     border-bottom: $border-bottom-line;
 
     &-active {
+      display: flex;
+      align-items: center;
       padding: 6px;
       border-radius: 8px;
     }

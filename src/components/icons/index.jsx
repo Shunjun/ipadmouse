@@ -16,23 +16,41 @@ function Icon(props, ref) {
     color,
     className,
     bgStyle,
+    bgColorOpacity,
     ...restProps
   } = props;
 
+  function checkColorName(col) {
+    if (typeof col === "string") {
+      if (col === "none" || col === "unset") {
+        return "unset";
+      }
+      return col.startsWith("#") ? col : `#${col}`;
+    } else if (typeof col === "number") {
+      return `#${col}`;
+    } else {
+      return;
+    }
+  }
+
   const warpperStyle = useMemo(() => {
+    return {
+      width: size ? `${size}px` : undefined,
+      height: size ? `${size}px` : undefined,
+    };
+  }, [size]);
+
+  const memoBgStyle = useMemo(() => {
     let style = {};
-
     style.visibility = hasbg ? "visible" : "hidden";
-    style.width = size ? `${size}px` : undefined;
-    style.height = size ? `${size}px` : undefined;
-    style.backgroundColor = bgColor;
-
+    style.backgroundColor = checkColorName(bgColor);
+    style.opacity = bgColorOpacity || 1;
     style = {
       ...bgStyle,
       ...style,
     };
     return style;
-  }, [hasbg, size, bgColor, bgStyle]);
+  }, [hasbg, bgColor, bgStyle]);
 
   function getIconSize(bgSize) {
     return Math.floor(bgSize * 0.5);
@@ -41,7 +59,7 @@ function Icon(props, ref) {
   const iconStyle = useMemo(() => {
     let style = {};
     style.fontSize = fontSize ? `${fontSize}px` : `${getIconSize(size)}px`;
-    style.color = color;
+    style.color = checkColorName(color);
 
     return style;
   }, [fontSize, color]);
@@ -50,13 +68,14 @@ function Icon(props, ref) {
     <span
       ref={ref}
       style={warpperStyle}
-      className={classnames(["icon-bg", className])}
+      className={classnames(["icon-warpper", className])}
       {...restProps}
     >
       <i
         style={iconStyle}
         className={classnames(["icon", "iconfont", type])}
       ></i>
+      <span className="icon-bg" style={memoBgStyle}></span>
     </span>
   );
 }

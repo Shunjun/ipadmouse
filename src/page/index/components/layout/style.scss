@@ -1,6 +1,6 @@
 @import "../../../../styles/index.scss";
 
-.s-warpper {
+.s-layout {
   display: flex;
   flex-direction: column;
 
@@ -25,6 +25,7 @@
   align-items: flex-start;
   min-width: $min-width;
   width: 354px;
+  padding: 42px 0;
 
   @include l_screen {
     flex-direction: column;
@@ -33,10 +34,26 @@
 
 .s-content {
   overflow: hidden;
-  flex: 1;
 
-  @include l_screen {
-    border-radius: 30px;
-    background-color: #fff;
+  height: 100%;
+  scrollbar-width: none;
+
+  &:hover {
+    overflow-y: auto;
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &-warpper {
+    padding: $content-margin;
+    overflow: hidden;
+    flex: 1;
+
+    @include l_screen {
+      border-radius: 30px;
+      background-color: #fff;
+    }
   }
 }

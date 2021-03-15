@@ -14,7 +14,6 @@ export function useAvailableRange(range) {
     }
     availableRange.current = range;
     if (range === "window") {
-      console.log(range);
       document.documentElement.style.cursor = "none";
     }
 

@@ -1,18 +1,27 @@
 @import "@/styles/index.scss";
 
-.icon-bg {
+.icon-warpper {
+  overflow: hidden;
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
 
   width: $icon-defauli-bg-size;
   height: $icon-defauli-bg-size;
   border-radius: $icon-default-bg-border-radius;
+}
 
+.icon-bg {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
   background-color: $red;
 }
 
 .icon {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -53%);
   color: $white;
   font-size: $icon-defauli-size;
 }

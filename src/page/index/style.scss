@@ -9,13 +9,11 @@
   justify-content: center;
 }
 
-.content {
-  padding: $content-top-margin $content-sider-margin $content-bottom-margin;
-}
-
 .balance {
-  display: flex;
-  justify-content: space-between;
+  &-warpper {
+    display: flex;
+    justify-content: space-between;
+  }
 
   &-totalize {
     display: flex;
@@ -50,9 +48,20 @@
     }
 
     &-title {
+      text-align: center;
       color: #9191a4;
       font-size: 16px;
       margin-top: 14px;
     }
   }
+
+  &-split {
+    border-bottom: $border-bottom-line;
+    margin-top: 44px;
+    margin-right: -$content-sider-margin;
+  }
+}
+
+.section-interval {
+  margin-top: 56px;
 }

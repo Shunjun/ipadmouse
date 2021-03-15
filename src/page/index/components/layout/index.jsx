@@ -3,7 +3,7 @@ import classnames from "classnames";
 import "./style.scss";
 
 export function Layout({ children }) {
-  return <div className="s-warpper">{children}</div>;
+  return <div className="s-layout">{children}</div>;
 }
 
 export function Nav({ children }) {
@@ -11,7 +11,11 @@ export function Nav({ children }) {
 }
 
 export function Content({ children, className }) {
-  return <div className={classnames(["s-content", className])}>{children}</div>;
+  return (
+    <div className="s-content-warpper">
+      <div className={classnames(["s-content", className])}>{children}</div>
+    </div>
+  );
 }
 
 Layout.Content = Content;

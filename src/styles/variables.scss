@@ -1,4 +1,4 @@
-// 颜色
+// color
 $white: #ffffff;
 $red: #f67171;
 $orange: #ff8702;
@@ -9,12 +9,17 @@ $green: #23b07d;
 $bluepurple: #696adf;
 $blue: #32a7e2;
 $grape: #b548c6;
+$grayblue: #e4e7ee;
+$gray: #949aa5;
+$grayline: #eaeaea;
+$deepbule: #37375c;
 
 $background-color: #dddded;
 $navbar-background-color: #f3f3f8;
 
+// font
 $font-color-title: #273240;
-$font-color-graytitle: #949aa5;
+$font-color-graytitle: $gray;
 
 $divisionline-color: #e8e8ed;
 
@@ -24,15 +29,16 @@ $min-width: 10px;
 $navbar-width: 356px;
 $navbar-marginleft: 38px;
 
-//icon
+// icon
 $icon-defauli-size: 20px;
 $icon-defauli-bg-size: 38px;
 $icon-default-bg-border-radius: 14px;
 
-//content
+// content
 $content-sider-margin: 70px;
 $content-top-margin: 58px;
-$content-bottom-margin: 38px;
+$content-bottom-margin: 58px;
+$content-margin: 70px 58px;
 
 // PADDING
 $background-padding: 20px;
@@ -40,3 +46,15 @@ $background-padding: 20px;
 $hover_padding: 12px;
 
 $border-bottom-line: 1px solid $divisionline-color;
+
+// Charts
+$figure-item-disable-color: $grayblue;
+$figure-item-color: $blue;
+$figure-item-top-radius: 6px;
+$Charts-axis-height: 38px;
+$Charts-axis-width: 50px;
+$charts-axis-line-border: 1px dashed $grayline;
+$charts-axis-color: $gray;
+
+// popup
+$popup-shadow-color: #dddddd;
