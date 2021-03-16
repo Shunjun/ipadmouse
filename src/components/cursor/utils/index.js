@@ -1,5 +1,3 @@
-import { values } from "lodash";
-
 export function getElementRect(ele) {
   return ele.getBoundingClientRect();
 }
@@ -21,19 +19,31 @@ export function getChildInfo(child) {
     top,
   };
   copyFromStyle(radiusKeys, childInfo, childStyle);
+
   return childInfo;
+}
+
+export function changeStyleValue2Number(styleValue) {
+  if (typeof styleValue === "number") {
+    return styleValue;
+  } else if (typeof styleValue === "string" && styleValue.endsWith("px")) {
+    const value = Number(styleValue.slice(0, -2));
+    if (!isNaN(value)) {
+      return value;
+    }
+  }
 }
 
 export function copyFromStyle(keys, to, from) {
   keys.forEach((key) => {
     const styleValue = from[key];
-    if (typeof styleValue === "number") {
+    const withUnit =
+      typeof styleValue === "string" &&
+      (styleValue.endsWith("px") || styleValue.endsWith("%"));
+    if (withUnit) {
       to[key] = styleValue;
-    } else if (typeof styleValue === "string" && styleValue.endsWith("px")) {
-      const value = Number(styleValue.slice(0, -2));
-      if (!isNaN(value)) {
-        to[key] = value;
-      }
+    } else if (typeof styleValue === "number") {
+      to[key] = styleValue + "px";
     }
   });
 }

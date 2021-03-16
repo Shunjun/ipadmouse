@@ -27,6 +27,10 @@
       font-size: 18px;
       font-weight: 600;
       color: $font-color-title;
+      span {
+        padding: 8px;
+        border-radius: 6px;
+      }
     }
   }
 

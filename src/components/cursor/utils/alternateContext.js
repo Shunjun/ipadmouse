@@ -3,41 +3,64 @@ import { createContext } from "react";
 class Alternates {
   constructor() {
     this.alters = new Map();
-    this.changeFunc = null;
-    this.leaveFunc = null;
+    this.funcs = {};
   }
 
-  bind(changeCb, leaveCb) {
-    this.changeFunc = changeCb;
-    this.leaveFunc = leaveCb;
+  bind(enentName, cb) {
+    enentName = toLowerCase(enentName);
+    if (typeof enentName !== "string" || typeof cb !== "function") {
+      return;
+    }
+    if (!this.funcs[enentName]) {
+      this.funcs[enentName] = new Set();
+    }
+    this.funcs[enentName].add(cb);
   }
 
-  add(child, info) {
-    this.alters.set(child, info);
-    this.changeCursor();
+  remove(enentName, cb) {
+    enentName = toLowerCase(enentName);
+    if (typeof enentName !== "string") {
+      return;
+    }
+    if (this.funcs[enentName]) {
+      return this.funcs[enentName].delete(cb);
+    }
+    return false;
   }
 
-  refresh(child, info) {
-    if (this.alters.has(child)) {
+  emit(enentName, child, info) {
+    enentName = toLowerCase(enentName);
+    if (enentName === "mouseenter") {
+      if (this.alters.size > 0) {
+        return;
+      }
       this.alters.set(child, info);
-      this.changeCursor();
+
+      this.forEach(enentName, child, info);
+    } else if (enentName === "mouseleave") {
+      this.alters.delete(child);
+      if (this.alters.size !== 0) {
+        return;
+      }
+      this.forEach(enentName, child, info);
+    } else {
+      this.alters.set(child, info);
+      this.forEach(enentName, child, info);
     }
   }
 
-  changeCursor() {
-    // TODO 如果有多个元素,选择正确的元素
-    const info = Array.from(this.alters.values())[0];
-    if (typeof this.changeFunc === "function") {
-      this.changeFunc(info);
+  forEach(enentName, ...arg) {
+    if (!this.funcs[enentName]) {
+      return;
     }
+    this.funcs[enentName].forEach((cb) => {
+      cb(...arg);
+    });
   }
+}
 
-  remove(child) {
-    this.alters.delete(child);
-    if (typeof this.leaveFunc === "function") {
-      this.leaveFunc();
-    }
-  }
+function toLowerCase(str) {
+  return str.toLowerCase();
 }
 
 export default createContext(new Alternates());

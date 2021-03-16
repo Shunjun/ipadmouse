@@ -5,6 +5,14 @@
   z-index: 9999;
   cursor: none;
   pointer-events: none;
+
+  &-shape {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .s-containt-wrapper {

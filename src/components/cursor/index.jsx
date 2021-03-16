@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useMemo, useRef, useContext } from "react";
-import RcTweenOne from "rc-tween-one";
 import { throttle } from "lodash";
 import AlternateContext from "./utils/alternateContext";
 import _Alternate from "./components/Alternate";
@@ -11,14 +10,19 @@ import {
   warn,
 } from "./utils";
 import { useAvailableRange } from "./hooks";
-import { gsap } from "gsap";
+import gsap from "gsap";
 
-const path = "M0,100 100,0";
-const moveEase = RcTweenOne.easing.path(path);
+// const path = "M0,100 100,0";
+// const moveEase = RcTweenOne.easing.path(path);
 
-const effectEase = "easeOutQuart";
+const effectEase = "power4.out";
+const moveEase = "none";
 
-const defaultConfig = {};
+const moveduration = 0.05;
+
+const defaultConfig = {
+  transformOrigin: "center",
+};
 
 const radiusKeys = [
   "borderTopLeftRadius",
@@ -41,11 +45,12 @@ function Cursor(props) {
   } = props;
 
   const cursorRef = useRef(null);
+  const cursorShapeRef = useRef(null);
+  const cursorEffectRef = useRef(null);
+
   const containerRef = useRef(null);
   // 保存触发元素的 Context
-  const AlterContext = useContext(AlternateContext);
-  // 是否 Hover 状态
-  const alterHover = useRef(false);
+  const alterContext = useContext(AlternateContext);
   // 是否在执行离开动画
   const alterLeaving = useRef(false);
   // 离开的时间
@@ -56,10 +61,24 @@ function Cursor(props) {
   const inPage = useRef(false);
   //
   const duration = useRef(0);
+  // 当前激活的元素
+  const currentAlterInfo = useRef();
+  //
+  const isHover = useRef();
 
   // 绑定 hover 动画函数
   useEffect(() => {
-    AlterContext.bind(changeCursor, leaveAlternateElement);
+    alterContext.bind("mouseEnter", enterAlternateElement);
+    alterContext.bind("mouseLeave", leaveAlternateElement);
+    alterContext.bind("refresh", enterAlternateElement);
+    alterContext.bind("click", clickAlternateElement);
+
+    return () => {
+      alterContext.remove("mouseEnter", enterAlternateElement);
+      alterContext.remove("mouseLeave", leaveAlternateElement);
+      alterContext.remove("refresh", enterAlternateElement);
+      alterContext.remove("click", clickAlternateElement);
+    };
   }, []);
 
   const cursorInfo = useMemo(() => {
@@ -79,87 +98,109 @@ function Cursor(props) {
     };
   }, []);
 
-  const [animation, setAnimation] = useState({});
-
-  function getMoveAnimationConfig(type) {
+  function getMoveAnimationConfig() {
     const [clientX, clientY] = mousePos.current;
-    let { width, height } = cursorInfo;
+    let { width, height, borderRadius } = cursorInfo;
     const _inPage = !!inPage.current;
-    const duration = getAnimationDuration(type);
-    const ease = getAnimationEase(type);
+    const duration = getAnimationDuration();
+    const ease = getAnimationEase();
     if (!_inPage) {
       width = height = 0;
     }
 
-    if (type === "leave") {
-      return {
-        ...cursorInfo,
-        ease,
-        duration,
-        width,
-        height,
-      };
-    } else {
-      return {
-        ...cursorInfo,
-        ease,
-        duration,
-        x: clientX - Math.floor(width / 2),
-        y: clientY - Math.floor(height / 2),
-      };
-    }
+    return {
+      ...defaultConfig,
+      ...cursorInfo,
+      borderRadius: borderRadius + "px",
+      width,
+      height,
+      ease,
+      duration,
+      x: clientX,
+      y: clientY,
+    };
   }
 
-  function getAnimationEase(type) {
-    if (type === "hover" || alterLeaving.current) {
+  function getAnimationEase() {
+    if (isHover.current || alterLeaving.current) {
       return effectEase;
     } else {
       return moveEase;
     }
   }
 
-  function getAnimationDuration(type) {
+  function getAnimationDuration() {
     const { duration: _duration } = props;
-    const animationDuration = typeof _duration === "number" ? _duration : 250;
-    if (type === "hover" && alterHover.current) {
+    const animationDuration =
+      typeof _duration === "number" ? _duration / 1000 : 0.25;
+    if (isHover.current) {
       duration.current = animationDuration;
     } else if (alterLeaving.current) {
       // 计算离开的用时
-      const passedTime = getPerformanceTime() - alterLeavingTime.current;
-      if (passedTime < animationDuration) {
+      const passedTime =
+        (getPerformanceTime() - alterLeavingTime.current) / 1000;
+      if (passedTime < animationDuration - moveduration) {
         duration.current = animationDuration - passedTime;
       } else {
-        duration.current = 0;
+        duration.current = moveduration;
       }
-    } else if (type === "disable") {
-      duration.current = 50;
     } else {
-      duration.current = 0;
+      duration.current = moveduration;
     }
     return duration.current;
   }
 
-  function getHoverAnimationConfig(info) {
-    const { width, height, left, top } = info;
+  function getChangeAnimationConfig() {
+    const info = currentAlterInfo.current;
     const _duration = getAnimationDuration("hover");
-    const ease = getAnimationEase("hover");
-    const config = {
-      ...defaultConfig,
-      ease,
-      duration: _duration,
-      width,
-      height,
-      x: left,
-      y: top,
-    };
-    copyFromStyle(radiusKeys, config, info);
-    return config;
+    const ease = getAnimationEase();
+    if (isHover.current) {
+      // 进入元素
+      const { width, height, left, top } = info;
+      const config = {
+        ...defaultConfig,
+        ease,
+        duration: _duration,
+        width,
+        height,
+        x: left + Math.floor(width / 2),
+        y: top + Math.floor(height / 2),
+      };
+      copyFromStyle(radiusKeys, config, info);
+      return config;
+    } else {
+      // 离开元素
+      const { borderRadius } = cursorInfo;
+      const config = {
+        ...defaultConfig,
+        ...cursorInfo,
+        borderRadius: borderRadius + "px",
+        ease,
+        duration: _duration,
+      };
+      return config;
+    }
   }
 
-  function createAnimation(config) {
-    // console.log(config);
-    // gsap.to(cursorRef.current, config);
-    setAnimation(config);
+  const animates = useRef([]);
+
+  function createAnimation(animConfig) {
+    const { x, y, ease, duration, transformOrigin, ...config } = animConfig;
+
+    animates.current.forEach((anim) => anim.kill());
+    // gsap占用了transform 属性，无法修改中心点，
+    // 或者不知道怎么同时添加两个 transform function
+    // 通过两层标签暂时解决问题
+    animates.current.push(
+      gsap.to(cursorRef.current, { x, y, ease, duration, transformOrigin })
+    );
+    animates.current.push(
+      gsap.to(cursorShapeRef.current, { ease, duration, ...config })
+    );
+  }
+
+  function createEffectAnimation(effectConfig) {
+    gsap.to(cursorEffectRef.current, effectConfig);
   }
 
   const availableRange = useAvailableRange(range);
@@ -187,38 +228,72 @@ function Cursor(props) {
 
   const leaveTimer = useRef();
 
-  function changeCursor(info) {
+  function enterAlternateElement(_ele, info) {
+    isHover.current = true;
+    currentAlterInfo.current = info;
     clearTimeout(leaveTimer.current);
     alterLeaving.current = false;
-    alterHover.current = true;
-    createAnimation(getHoverAnimationConfig(info));
+    createAnimation(getChangeAnimationConfig());
   }
 
   function leaveAlternateElement() {
-    alterHover.current = false;
+    isHover.current = false;
+    currentAlterInfo.current = null;
     alterLeavingTime.current = getPerformanceTime();
     // 执行离开动画的状态,防止 move 吃掉 leaving 的动画
     alterLeaving.current = true;
     leaveTimer.current = setTimeout(() => {
       alterLeaving.current = false;
     }, duration.current);
-    // console.log("离开了");
-    console.log("leave", getMoveAnimationConfig("leave"));
-    createAnimation(getMoveAnimationConfig("leave"));
+    createAnimation(getChangeAnimationConfig());
+  }
+
+  function clickAlternateElement(_ele, info = {}) {
+    const { opacity, backgroundColor } = cursorInfo;
+    const shapeConfig = {
+      ...defaultConfig,
+      opacity,
+      backgroundColor,
+      x: "-50%",
+      y: "-50%",
+    };
+
+    const keys = [
+      ...radiusKeys,
+      "width",
+      "height",
+      "backgroundColor",
+      "opacity",
+    ];
+    copyFromStyle(keys, shapeConfig, info);
+
+    const config = {
+      keyframes: [
+        { ...shapeConfig, scale: 1, duration: 0 },
+        {
+          ...shapeConfig,
+          scale: 1.4,
+          opacity: 0,
+          duration: 0.4,
+        },
+      ],
+      ease: "power2.out",
+    };
+    console.log(config);
+    createEffectAnimation(config);
   }
 
   useEffect(() => {
     // mousemove
     function mousemoveListener(e) {
-      if (alterHover.current) {
+      if (isHover.current) {
         return;
       }
       const { clientX, clientY } = e;
       mousePos.current = [clientX, clientY];
       inPage.current = true;
       if (isAvailableIn([clientX, clientY])) {
-        console.log("move", getMoveAnimationConfig("move"));
-        createAnimation(getMoveAnimationConfig("move"));
+        createAnimation(getMoveAnimationConfig());
       } else {
         // leave viewport
         mouseleaveListerner(e);
@@ -229,7 +304,7 @@ function Cursor(props) {
     // mouseLeave
     function mouseleaveListerner(e) {
       inPage.current = false;
-      createAnimation(getMoveAnimationConfig("disable"));
+      createAnimation(getMoveAnimationConfig());
     }
 
     // mouse in viewport
@@ -248,18 +323,14 @@ function Cursor(props) {
       <div
         {...warperProps}
         className={["s-containt-wrapper", className ? className : ""]}
-        ref={(e) => {
-          containerRef.current = e;
-        }}
+        ref={containerRef}
       >
         {children}
       </div>
-      {/* <span className="s-cursor" ref={cursorRef}></span> */}
-      <RcTweenOne
-        component="span"
-        animation={animation}
-        componentProps={{ className: "s-cursor" }}
-      />
+      <span className="s-cursor" ref={cursorRef}>
+        <span className="s-cursor-shape" ref={cursorEffectRef}></span>
+        <span className="s-cursor-shape" ref={cursorShapeRef}></span>
+      </span>
     </>
   );
 }

@@ -43,6 +43,7 @@
 .user-avatar {
   width: 60px;
   height: 60px;
+  vertical-align: middle;
 }
 
 .navbar-nav {
@@ -51,6 +52,14 @@
   justify-content: flex-start;
   align-items: flex-start;
   overflow-y: hidden;
+
+  &::-webkit-scrollbar {
+    width: $scrollbar-width;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb-color;
+  }
 
   &:hover {
     overflow-y: auto;
@@ -74,12 +83,12 @@
     height: 74px;
     padding-left: $navbar-marginleft;
     width: 300px;
-    border-bottom: $border-bottom-line;
+    // border-bottom: $border-bottom-line;
 
     &-active {
       display: flex;
       align-items: center;
-      padding: 6px;
+      padding: 10px;
       border-radius: 8px;
     }
 

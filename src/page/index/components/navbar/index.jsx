@@ -109,14 +109,14 @@ function Navbar(props) {
 
 function NavItem({ bgColor, title, iconName }) {
   return (
-    <Alternate>
-      <li className="navbar-nav-item">
-        <a href="#" className="navbar-nav-item-active">
+    <li className="navbar-nav-item">
+      <Alternate>
+        <a className="navbar-nav-item-active">
           <Icon bgColor={bgColor} type={iconName}></Icon>
           <span className="navbar-nav-item-title">{title}</span>
         </a>
-      </li>
-    </Alternate>
+      </Alternate>
+    </li>
   );
 }
 
