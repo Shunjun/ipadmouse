@@ -92,6 +92,8 @@ function Alternate(props, ref) {
     const info = (childInfo.current = createChildInfo(child));
 
     Alternates.emit("mouseenter", child, info);
+
+    addScrolllistener();
   }, []);
 
   const handleMouseLeave = useCallback((e) => {
@@ -101,22 +103,40 @@ function Alternate(props, ref) {
     isChildHover.current = false;
     const child = childRef.current;
     Alternates.emit("mouseleave", child);
+
+    removeScrolllistener("leave");
   }, []);
+
+  const handleScroll = useCallback((e) => {
+    checkChildInfo();
+  }, []);
+
+  function addScrolllistener() {
+    document.addEventListener("scroll", handleScroll, true);
+  }
+
+  function removeScrolllistener() {
+    document.removeEventListener("scroll", handleScroll, true);
+  }
+
+  useEffect(() => {
+    if (isChildHover.current) {
+      checkChildInfo();
+    }
+  });
 
   // 检查元素位置是否改变,更新鼠标形状及位置
   // 创建元素的信息
-  useEffect(() => {
-    if (isChildHover.current) {
-      const child = childRef.current;
-      const preInfo = childInfo.current;
-      const newInfo = createChildInfo(child);
+  function checkChildInfo() {
+    const child = childRef.current;
+    const preInfo = childInfo.current;
+    const newInfo = createChildInfo(child);
 
-      if (!isSameInfo(preInfo, newInfo)) {
-        childInfo.current = newInfo;
-        Alternates.emit("refresh", child, newInfo);
-      }
+    if (!isSameInfo(preInfo, newInfo)) {
+      childInfo.current = newInfo;
+      Alternates.emit("refresh", child, newInfo);
     }
-  });
+  }
 
   const tagProps = {
     ...children.props,
