@@ -2,6 +2,8 @@
 
 在浏览器中模拟 ipad 鼠标, 并提供 Cursor 组件, 可以快速在基于 React 的项目中实现此效果.
 
+[在线预览](https://shunjun.github.io/ipadmouse/)
+
 > ⚠️ 仅支持桌面浏览器
 
 > 界面 UI 参考: [Exploration - Digital Wallet App - iPad](https://dribbble.com/shots/14728548--Exploration-Digital-Wallet-App-iPad/attachments/6429819?mode=media)
