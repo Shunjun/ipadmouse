@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
+    "deploy": "react-app-rewired build CI=false",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
