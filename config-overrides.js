@@ -23,8 +23,6 @@ const addCustomize = () => (config) => {
     "@page": resolve("src/page"),
   };
 
-  config.output.publicPath = "/ipadmouse/";
-
   return config;
 };
 
