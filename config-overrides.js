@@ -23,6 +23,12 @@ const addCustomize = () => (config) => {
     "@page": resolve("src/page"),
   };
 
+  config.externals = {
+    ...config.externals,
+    react: "React",
+    "react-dom": "ReactDOM",
+  };
+
   return config;
 };
 
