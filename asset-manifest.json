@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/ipadmouse/static/css/main.72003046.chunk.css",
-    "main.js": "/ipadmouse/static/js/main.9b9b1dd5.chunk.js",
-    "main.js.map": "/ipadmouse/static/js/main.9b9b1dd5.chunk.js.map",
+    "main.js": "/ipadmouse/static/js/main.c04e2424.chunk.js",
+    "main.js.map": "/ipadmouse/static/js/main.c04e2424.chunk.js.map",
     "runtime-main.js": "/ipadmouse/static/js/runtime-main.bf66d47d.js",
     "runtime-main.js.map": "/ipadmouse/static/js/runtime-main.bf66d47d.js.map",
     "static/js/2.ac725d6b.chunk.js": "/ipadmouse/static/js/2.ac725d6b.chunk.js",
@@ -12,12 +12,12 @@
     "index.html": "/ipadmouse/index.html",
     "static/css/main.72003046.chunk.css.map": "/ipadmouse/static/css/main.72003046.chunk.css.map",
     "static/js/2.ac725d6b.chunk.js.LICENSE.txt": "/ipadmouse/static/js/2.ac725d6b.chunk.js.LICENSE.txt",
-    "static/media/image.b12ed7b4.jpg": "/ipadmouse/static/media/image.b12ed7b4.jpg"
+    "static/media/image.2d4f2b57.jpg": "/ipadmouse/static/media/image.2d4f2b57.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.bf66d47d.js",
     "static/js/2.ac725d6b.chunk.js",
     "static/css/main.72003046.chunk.css",
-    "static/js/main.9b9b1dd5.chunk.js"
+    "static/js/main.c04e2424.chunk.js"
   ]
 }
