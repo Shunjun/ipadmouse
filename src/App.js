@@ -1,4 +1,3 @@
-import "./App.scss";
 import Cousor from "./components/cursor";
 import IndexPage from "./page/index";
 

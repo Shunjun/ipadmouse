@@ -16,6 +16,7 @@ function Icon(props, ref) {
     color,
     className,
     bgStyle,
+    bgClassName,
     bgColorOpacity,
     ...restProps
   } = props;
@@ -75,7 +76,10 @@ function Icon(props, ref) {
         style={iconStyle}
         className={classnames(["icon", "iconfont", type])}
       ></i>
-      <span className="icon-bg" style={memoBgStyle}></span>
+      <span
+        className={classnames(["icon-bg", bgClassName])}
+        style={memoBgStyle}
+      ></span>
     </span>
   );
 }

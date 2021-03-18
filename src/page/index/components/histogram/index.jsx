@@ -47,8 +47,8 @@ export default function Histogram(props) {
           size="20"
           bgColor="none"
           color="#9191a4"
-          fontSize="8"
-          type="iconzuanshi"
+          fontSize="16"
+          type="iconjiantou"
         />
       </div>
     </Alternate>

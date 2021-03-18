@@ -40,7 +40,11 @@
     align-items: center;
 
     &-item {
-      margin-left: 62px;
+      margin-left: 36px;
+
+      @include l_screen {
+        margin-left: 62px;
+      }
     }
 
     &-icon[class] {

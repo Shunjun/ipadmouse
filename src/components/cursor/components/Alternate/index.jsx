@@ -20,7 +20,7 @@ function Alternate(props, ref) {
 
   function checkChildInstance() {
     if (!(childRef.current instanceof HTMLElement)) {
-      throw new Error(childRef.current, "child is not HTMLLIElement");
+      throw new Error(childRef.current, "child is not HTMLElement");
     }
   }
 

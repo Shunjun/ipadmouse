@@ -71,11 +71,23 @@ function Navbar(props) {
         </div>
         <div className="navbar-usrinfo-setting">
           <Alternate>
-            <Icon color="#9E9EB9" bgColor="#DDDDED" type="iconshezhi" />
+            <Icon
+              bgClassName="navbar-usrinfo-setting-iconbg"
+              color="#9E9EB9"
+              bgColor="#DDDDED"
+              type="iconshezhi"
+            />
           </Alternate>
         </div>
       </div>
       <nav className="navbar-nav">
+        <NavItem
+          className="navbar-nav-list-menu"
+          bgColor="#9E9EB9"
+          key="caidan"
+          title="caidan"
+          iconName="iconhanbaocaidan"
+        ></NavItem>
         <div className="navbar-nav-list-title">Menu</div>
         <ul className="navbar-nav-list">
           {navMenuList.map(({ bgColor, title, icon }) => {
@@ -102,14 +114,21 @@ function Navbar(props) {
             );
           })}
         </ul>
+        <NavItem
+          className="navbar-nav-list-setting"
+          bgColor="#9E9EB9"
+          key="setting"
+          title="setting"
+          iconName="iconshezhi"
+        ></NavItem>
       </nav>
     </>
   );
 }
 
-function NavItem({ bgColor, title, iconName }) {
+function NavItem({ bgColor, title, iconName, className }) {
   return (
-    <li className="navbar-nav-item">
+    <li className={classnames(["navbar-nav-item", className])}>
       <Alternate>
         <a className="navbar-nav-item-active">
           <Icon bgColor={bgColor} type={iconName}></Icon>

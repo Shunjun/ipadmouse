@@ -39,7 +39,7 @@ export default function index() {
                   <Alternate>
                     <Icon
                       size={56}
-                      type="iconshangchuan"
+                      type="iconxiazaigengxin"
                       className="balance-operates-icon"
                     ></Icon>
                   </Alternate>

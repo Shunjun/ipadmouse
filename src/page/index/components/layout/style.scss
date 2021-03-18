@@ -5,8 +5,11 @@
   flex-direction: column;
 
   overflow: hidden;
-  width: 100vw;
-  max-width: 1400px;
+  width: 100%;
+  min-width: 680px;
+  max-width: 1200px;
+
+  max-height: 1000px;
 
   border-radius: 15px;
   background-color: $navbar-background-color;
@@ -21,14 +24,24 @@
 
 .s-nav {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   min-width: $min-width;
-  width: 354px;
-  padding: 42px 0;
+  padding: 0 52px;
+  height: 90px;
 
   @include l_screen {
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 310px;
+    height: initial;
+    padding: 42px 0;
+  }
+
+  @include xl_screen {
+    width: 354px;
   }
 }
 
@@ -47,13 +60,14 @@
   }
 
   &-warpper {
-    padding: $content-margin;
+    padding: 20px 58px 70px;
     overflow: hidden;
     flex: 1;
+    background-color: #fff;
 
     @include l_screen {
+      padding: $content-margin;
       border-radius: 30px;
-      background-color: #fff;
     }
   }
 }
